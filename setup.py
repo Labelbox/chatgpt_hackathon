@@ -4,7 +4,7 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    name='helper',
+    name='chatgpt_hackathon',
     version='0.0.01',
     author='Labelbox',
     author_email="raphael@labelbox.com",
