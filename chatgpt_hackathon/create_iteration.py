@@ -32,7 +32,7 @@ def create_iteration(client, team_name, training_round):
     # Return created model run
     return model_run
     
-def create_model_run(client:lb.Client(), team_name:str, training_round:str):
+def create_model_run(client:lb.Client, team_name:str, training_round:str):
     """ Creates a model run for a given model with a given model name
     """
     # Enforce training round name
