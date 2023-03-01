@@ -7,7 +7,7 @@ def create_iteration(client, team_name, training_round):
     # Enforce training round as a string
     training_round = str(training_round)
     # Get source project which contains labels
-    source_project = get_project_with_name(client, "goemotions"))
+    source_project = get_project_with_name(client, "goemotions")
     # Get team project with curated data rows
     project = get_project_with_name(client, team_name)
     # Create a model run
