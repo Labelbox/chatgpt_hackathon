@@ -11,7 +11,7 @@ def register_team(client, team_name:str):
     Returns:
 
     """
-    ontology_id = "cleovlhqq10hm07wj2b5laj54"
+    ontology_id = "cleovli4l1bm907x14wt590vd"
     models = list(client.get_models(where=(lb.Model.name==team_name)))
     if models:
         raise ValueError(f"Project already exists with team name {team_name} - please resolve within the Labelbox UI")    
