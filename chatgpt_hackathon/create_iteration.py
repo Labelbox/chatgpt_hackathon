@@ -39,7 +39,7 @@ def create_model_run(client:lb.Client(), team_name:str, training_round:str):
     if training_round not in ["1", "2", "3"]:
         raise ValueError(f"Training round must be either 1, 2 or 3")
     # Get model
-    model = get_model_with_name(client=client, team_name)
+    model = get_model_with_name(client, team_name)
     # Create model run
     model_run = model.create_model_run(name=training_round)
     # Return model run
