@@ -12,10 +12,13 @@ def register_team(client, team_name:str):
 
     """
     ontology_id = "cleovlhqq10hm07wj2b5laj54"
-    model = client.create_model(name=team_name, ontology_id=ontology_id)
-    projects = list(client.get_projects(where=(lb.Project.name==project_name)))
+    models = list(client.get_models(where=(lb.Model.name==team_name)))
+    if models:
+        raise ValueError(f"Project already exists with team name {team_name} - please resolve within the Labelbox UI")    
+    projects = list(client.get_projects(where=(lb.Project.name==team_name)))
     if projects:
         raise ValueError(f"Project already exists with team name {team_name} - please resolve within the Labelbox UI")
+    model = client.create_model(name=team_name, ontology_id=ontology_id)
     project = client.create_project(name=team_name, media_type=MediaType.Text, queue_mode=QueueMode.Batch)
     project.setup_editor(client.get_ontology("cleovlhqq10hm07wj2b5laj54"))    
     print(f"Team {team_name} has registered a Labelbox Model and Project - good luck!")
