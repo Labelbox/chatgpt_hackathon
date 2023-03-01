@@ -1,7 +1,7 @@
 import labelbox as lb
 
 def get_model_with_name(client:lb.client, model_name:str):
-    """ Gets a single project given a project name -- errors out if there are no projects with that name, or if there are more than one
+    """ Gets a single model given a model name -- errors out if there are no models with that name, or if there are more than one
     Args:
         client        :   Required (lb.Client()) - Labelbox Client object
         model_name    :   Required (str) - Labelbox Model Name
@@ -14,4 +14,4 @@ def get_model_with_name(client:lb.client, model_name:str):
     elif len(models)!=1:
         raise ValueError(f"Multiple models exist with name {team_name} - please resolve this, as each team should have a unique name and only one model each")
     model = models[0] 
-    return project
+    return model
