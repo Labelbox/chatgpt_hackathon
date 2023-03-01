@@ -8,7 +8,7 @@ def get_model_with_name(client:lb.client, model_name:str):
     Returns:
         lb.Model() object
     """
-    models = list(client.get_projects(where=(lb.Model.name==model_name)))
+    models = list(client.get_models(where=(lb.Model.name==model_name)))
     if not models:
         raise ValueError(f"No models exist with name {team_name} - please ensure your Model's Name corresponds with a team name - if your team has not created a model yet, please do so")
     elif len(models!=1):
