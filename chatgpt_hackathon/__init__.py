@@ -1,2 +1,3 @@
 from .get_label_id_for_data_row_id import get_label_id_for_data_row_id
 from .get_project_with_name import get_project_with_name
+from .register_team import register_team
