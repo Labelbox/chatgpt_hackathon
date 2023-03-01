@@ -14,3 +14,4 @@ def get_project_with_name(client:lb.client, project_name:str):
     elif len(projects!=1):
         raise ValueError(f"Multiple projects exist with name {team_name} - please resolve this, as each team should have a unique name and only one project each")
     project = projects[0] 
+    return project
