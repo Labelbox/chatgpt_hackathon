@@ -5,6 +5,7 @@ import requests
 import json
 import openai
 from tqdm import tqdm
+from concurrent.futures import ThreadPoolExecutor
 
 def initiate_fine_tuning(api_key, client, team_name, training_round):
     """ For a given training round, generates a training file to-be-passed to OpenAI and a dictionary with data row ID and input data
@@ -17,15 +18,13 @@ def initiate_fine_tuning(api_key, client, team_name, training_round):
     training_file_name = "completions.jsonl"
     my_file = open(training_file_name, "w")
     print(f"Creating training file...")
-    for label in tqdm(labels):
-        text = get_text(label)
-        chatgpt_dict = {
-            "prompt" : f"{get_text(label)}#-#-#-#-#",
-            "completion" : f"{label['Label']['classifications'][0]['answer']['value']}#####"
-        }
-        data_row_id_to_model_input[label["DataRow ID"]] = chatgpt_dict
-        as_string = json.dumps(chatgpt_dict)
-        my_file.write(f"{as_string}\n")      
+    with ThreadPoolExecutor(max_workers=8) as executor:
+        futures = [executor.submit(write_chatgpt_input, label) for label in labels]
+        for future in tqdm(futures, total=len(labels)):
+            chatgpt_dict = future.result()
+            data_row_id_to_model_input[label["DataRow ID"]] = chatgpt_dict
+            as_string = json.dumps(chatgpt_dict)
+            file.write(f"{as_string}\n")         
     print(f"Success: Created training file with name `{training_file_name}`")   
     print(f"Connecting with OpenAI...")
     openai_key = requests.post("https://us-central1-saleseng.cloudfunctions.net/get-openai-key", data=json.dumps({"api_key" : api_key}))
@@ -50,12 +49,13 @@ def initiate_fine_tuning(api_key, client, team_name, training_round):
     print(f'Fine-tune Job with ID `{fune_tune_job_id}` initiated')
     return fune_tune_job_id, data_row_id_to_model_input
 
-def get_text(label):
-    """ Gets text for a given asset in GCS
-    Args:
-    Returns:
-    """
+def write_chatgpt_input(label):
     gs_url = label['Labeled Data']
     https_url = f"https://storage.googleapis.com/{gs_url[5:]}"
-    text = requests.get(https_url).content.decode()
-    return text  
+    text = requests.get(https_url).content.decode()    
+    chatgpt_dict = {
+        "prompt" : f"{text}#-#-#-#-#",
+        "completion" : f"{label['Label']['classifications'][0]['answer']['value']}#####"
+    }
+    return chatgpt_dict
+    
