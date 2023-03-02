@@ -6,9 +6,12 @@ def create_training_file(client, team_name, training_round):
     """ For a given training round, generates a training file to-be-passed to OpenAI and a dictionary with data row ID and input data
     """
     model_run = get_model_run(client, team_name, training_round)
+    print(f"Exporting labels...")
     labels = model_run.export_labels(download=True)
+    print(f"Export complete")    
     data_row_id_to_model_input = {}
     my_file = open("completions.jsonl", "w")
+    print(f"Creating training file...")
     for label in labels:
         text = get_text(label)
         chatgpt_dict = {
@@ -18,6 +21,7 @@ def create_training_file(client, team_name, training_round):
         data_row_id_to_model_input[label["DataRow ID"]] = chatgpt_dict
         as_string = json.dumps(chatgpt_dict)
         my_file.write(f"{as_string}\n")      
+    print(f"Success: Created training file with name `completions.jsonl`")        
     return "completions.jsonl", data_row_id_to_model_input
   
 def get_model_run(client, team_name, training_round):
