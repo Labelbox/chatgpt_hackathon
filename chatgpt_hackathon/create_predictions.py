@@ -35,15 +35,20 @@ def create_predictions(api_key, client, team_name, training_round, chatgpt_model
             prediction = future.result()
             predictions.append(prediction)
     ndjson_prediction = list(NDJsonConverter.serialize(predictions)) 
+    print(f"Success: Predictions generated")
+    print(f"Uploading predictions to Labelbox...")
     # Upload the prediction label to the Model Run
-    upload_job_prediction = model_run.add_predictions(
+    upload_job = model_run.add_predictions(
         name=str(uuid.uuid4()),
         predictions=ndjson_prediction
     )
     # Errors will appear for annotation uploads that failed.
     upload_job.wait_till_done()
     err = upload_job.errors
-    print("Errors:", upload_job_prediction.err)
+    if not err:
+        print(f"Success: Predictions uploaded to model run")
+    else:
+        print(f"Upload Error: {err}")
     # Return upload results
     return err
 
