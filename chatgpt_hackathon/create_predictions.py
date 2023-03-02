@@ -1,3 +1,4 @@
+from chatgpt_hackathon import get_model_run, get_chatgpt_input
 from labelbox.data.serialization import NDJsonConverter
 import labelbox.data.annotation_types as lb_types
 import openai
@@ -5,7 +6,7 @@ import uuid
 import requests
 import json
 
-def create_predictions(api_key, client, team_name, training_round, chatgpt_model_name, data_row_id_to_model_input):
+def create_predictions(api_key, client, team_name, training_round, chatgpt_model_name):
     # Get openai key
     openai_key = requests.post("https://us-central1-saleseng.cloudfunctions.net/get-openai-key", data=json.dumps({"api_key" : api_key}))
     openai_key = openai_key.content.decode()
@@ -13,12 +14,17 @@ def create_predictions(api_key, client, team_name, training_round, chatgpt_model
         raise ValueError(f"Incorrect API key - please ensure that your Labelbox API key is correct and try again")
     else:
         openai.api_key = openai_key  
+    training_round = str(training_round)
+    model_run = get_model_run(client, team_name, training_round)        
+    print(f"Exporting labels...")
+    labels = model_run.export_labels(download=True)
+    print(f"Export complete - {len(labels)} labels")       
     # Create predictions
     print(f"Creating predictions and uploading to model run...")
     predictions = []
     with ThreadPoolExecutor(max_workers=8) as executor:
-        futures = [executor.submit(create_prediction, openai_key, chatgpt_model_name, data_row_id_to_input[data_row_id]["prompt"]) for data_row_id in data_row_id_to_input]
-        for future in tqdm(futures, total=len(data_row_id_to_input)):
+        futures = [executor.submit(create_prediction, openai_key, chatgpt_model_name, label) for label in labels]
+        for future in tqdm(futures, total=len(labels)):
             prediction = future.result()
             predictions.append(prediction)
     ndjson_prediction = list(NDJsonConverter.serialize(predictions)) 
@@ -34,11 +40,12 @@ def create_predictions(api_key, client, team_name, training_round, chatgpt_model
     # Return upload results
     return err
 
-def create_prediction(openai_key, chatgpt_model_name, prompt):
+def create_prediction(openai_key, chatgpt_model_name, label):
+    chatgpt_dict, data_row_id = get_chatgpt_input(label)
     pred = openai.Completion.create(
         api_key = openai_key,
         model = chatgpt_model_name,
-        prompt = prompt,
+        prompt = chatgpt_dict["prompt"],
         max_tokens = 1,
         logprobs = 4,
         temperature = 1
