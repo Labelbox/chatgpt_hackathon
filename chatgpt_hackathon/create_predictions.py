@@ -43,7 +43,6 @@ def create_predictions(api_key, client, team_name, training_round, chatgpt_model
         predictions=ndjson_prediction
     )
     # Errors will appear for annotation uploads that failed.
-    upload_job.wait_till_done()
     err = upload_job.errors
     if not err:
         print(f"Success: Predictions uploaded to model run")
