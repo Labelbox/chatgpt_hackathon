@@ -12,18 +12,22 @@ import json
 def fine_tune_chatgpt(api_key, client, team_name, training_round, training_file_name, data_row_id_to_model_input):
     # Get openai key
     openai_key = requests.post("https://us-central1-saleseng.cloudfunctions.net/get-openai-key", data=json.dumps({"api_key" : api_key}))
-    result = openai_key.content.decode()
-    if "Error" in result:
+    openai_key = openai_key.content.decode()
+    if "Error" in openai_key:
         raise ValueError(f"Incorrect API key - please ensure that your Labelbox API key is correct and try again")
     else:
-        openai.api_key = result
+        openai.api_key = openai_key
     # Load training file into OpenAI
     training_file = openai.File.create(
         file=open(training_file_name,'r'), 
         purpose='fine-tune'
     )
     # Initiate training
-    fine_tune_job = openai.FineTune.create(api_key=openai_key, training_file=training_file["id"], model = 'ada')
+    fine_tune_job = openai.FineTune.create(
+        api_key=openai_key, 
+        training_file=training_file["id"], 
+        model = 'ada'
+    )
     print(f'Fine-tune initiated -- will check training status every 10 minutes until complete')
     # Check training status every 5 minutes
     tz = timezone('EST')  
