@@ -21,8 +21,9 @@ def initiate_fine_tuning(api_key, client, team_name, training_round):
     with ThreadPoolExecutor(max_workers=8) as executor:
         futures = [executor.submit(write_chatgpt_input, label) for label in labels]
         for future in tqdm(futures, total=len(labels)):
-            chatgpt_dict = future.result()
-            data_row_id_to_model_input[label["DataRow ID"]] = chatgpt_dict
+            chatgpt_dict = future.result()[0]
+            data_row_id = future.result()[1]
+            data_row_id_to_model_input[data_row_id] = chatgpt_dict
             as_string = json.dumps(chatgpt_dict)
             file.write(f"{as_string}\n")         
     print(f"Success: Created training file with name `{training_file_name}`")   
@@ -57,5 +58,5 @@ def write_chatgpt_input(label):
         "prompt" : f"{text}#-#-#-#-#",
         "completion" : f"{label['Label']['classifications'][0]['answer']['value']}#####"
     }
-    return chatgpt_dict
+    return chatgpt_dict, label["DataRow ID"]
     
