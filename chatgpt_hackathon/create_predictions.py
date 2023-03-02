@@ -6,6 +6,7 @@ import openai
 import uuid
 import requests
 import json
+import tqdm
 
 def create_predictions(api_key, client, team_name, training_round, chatgpt_model_name):
     # Get openai key
