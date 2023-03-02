@@ -23,7 +23,6 @@ def initiate_fine_tuning(api_key, client, team_name, training_round):
         futures = [executor.submit(get_chatgpt_input, label) for label in labels]
         for future in tqdm(futures, total=len(labels)):
             chatgpt_dict, data_row_id = future.result()
-            data_row_id_to_model_input[data_row_id] = chatgpt_dict
             as_string = json.dumps(chatgpt_dict)
             openai_file.write(f"{as_string}\n")   
     openai_file.close()
@@ -49,5 +48,5 @@ def initiate_fine_tuning(api_key, client, team_name, training_round):
     )
     fune_tune_job_id = fine_tune_job["id"]
     print(f'Fine-tune Job with ID `{fune_tune_job_id}` initiated')
-    return fune_tune_job_id, data_row_id_to_model_input
+    return fune_tune_job_id
     
