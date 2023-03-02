@@ -1,11 +1,11 @@
+from chatgpt_hackathon import get_model_with_name
 import requests
 import json
-from chatgpt_hackathon import get_model_with_name
 import requests
 import json
 import openai
 
-def initiate_fine_tuning(client, team_name, training_round):
+def initiate_fine_tuning(api_key, client, team_name, training_round):
     """ For a given training round, generates a training file to-be-passed to OpenAI and a dictionary with data row ID and input data
     """
     model_run = get_model_run(client, team_name, training_round)
