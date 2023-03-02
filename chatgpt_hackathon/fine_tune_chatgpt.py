@@ -7,9 +7,14 @@ from datetime import datetime
 from datetime import datetime
 from pytz import timezone
 
-def fine_tune_chatgpt(labelbox_key, client, team_name, training_round, training_file_name, data_row_id_to_model_input):
+def fine_tune_chatgpt(api_key, client, team_name, training_round, training_file_name, data_row_id_to_model_input):
     # Get openai key
-    openai.api_key = openai_key
+    openai_key = requests.post("https://us-central1-saleseng.cloudfunctions.net/get-openai-key", data=json.dumps({"api_key" : api_key}))
+    result = openai_key.content.decode()
+    if "Error" in result:
+        raise ValueError(f"Incorrect API key - please ensure that your Labelbox API key is correct and try again")
+    else:
+        openai.api_key = result
     # Load training file into OpenAI
     training_file = openai.File.create(
         file=open(training_file_name,'r'), 
