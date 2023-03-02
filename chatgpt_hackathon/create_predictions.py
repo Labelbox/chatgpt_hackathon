@@ -1,4 +1,4 @@
-from chatgpt_hackathon import get_model_run, get_chatgpt_input
+from chatgpt_hackathon import get_model_run, get_chatgpt_input, get_project_with_name
 from labelbox.data.serialization import NDJsonConverter
 from concurrent.futures import ThreadPoolExecutor
 import labelbox.data.annotation_types as lb_types
@@ -23,7 +23,8 @@ def create_predictions(api_key, client, team_name, training_round, chatgpt_model
     model_run = get_model_run(client, team_name, training_round)        
     print(f"Exporting labels...")
     labels = model_run.export_labels(download=True)
-    print(f"Export complete - {len(labels)} labels")       
+    print(f"Export complete - {len(labels)} labels")    
+    ontology = get_project_with_name(client, team_name).ontology()
     ontology_name_path_to_schema = get_ontology_schema_to_name_path(ontology, invert=True)
     # Create predictions
     print(f"Creating predictions and uploading to model run...")
