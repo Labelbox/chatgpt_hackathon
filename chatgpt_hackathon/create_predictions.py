@@ -34,13 +34,12 @@ def create_predictions(api_key, client, team_name, training_round, chatgpt_model
         for future in tqdm(futures, total=len(labels)):
             prediction = future.result()
             predictions.append(prediction)
-    ndjson_prediction = list(NDJsonConverter.serialize(predictions)) 
     print(f"Success: Predictions generated")
     print(f"Uploading predictions to Labelbox...")
     # Upload the prediction label to the Model Run
     upload_job = model_run.add_predictions(
         name=str(uuid.uuid4()),
-        predictions=ndjson_prediction
+        predictions=predictions
     )
     # Errors will appear for annotation uploads that failed.
     err = upload_job.errors
@@ -91,16 +90,12 @@ def create_prediction(openai_key, chatgpt_model_name, label, ontology_name_path_
     # Catches when ChatGPT didn't do a good job at predicting sentiment within the parameters of the use case
     if not name_path:
         name_path = "emotions///neutral"
-    schema_id = ontology_name_path_to_schema[name_path]
-    pred_answer = name_path.split("///")[1]
-    radio_prediction = lb_types.ClassificationAnnotation(
-        name="emotion", 
-        value= lb_types.Radio(answer=lb_types.ClassificationAnswer(
-            name=pred_answer,
-            confidence= 1 + (int(pred['choices'][0]['logprobs']['token_logprobs'][0])/10)
-        )))     
-    label_prediction = lb_types.Label(
-        data=lb_types.TextData(uid=data_row_id),
-        annotations = [radio_prediction]
-    )    
-    return label_prediction
+    schema_id = ontology_name_path_to_schema[name_path] 
+    label_ndjson = {
+        "uuid" : str(uuid.uuid4()),
+        "dataRow" : {"id" : data_row_id},
+        "schemaId" : ontology_name_path_to_schema["emotions"],
+        "answer" : {"schemaId" : schema_id},
+        "confidence" : 1+(int(pred['choices'][0]['logprobs']['token_logprobs'][0])/10)
+    }  
+    return label_ndjson
