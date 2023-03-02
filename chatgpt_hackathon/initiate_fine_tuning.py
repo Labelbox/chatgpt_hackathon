@@ -32,7 +32,7 @@ def initiate_fine_tuning(api_key, client, team_name, training_round):
     lb_file = open(lb_file_name, "w")
     lb_file.write(json.dumps(data_row_id_to_model_input))
     lb_file.close()
-    print(f"Success: Created Labelbox training file with name `{training_file_name}`")   
+    print(f"Success: Created Labelbox training file with name `{openai_file}`")   
     print(f"Connecting with OpenAI...")
     openai_key = requests.post("https://us-central1-saleseng.cloudfunctions.net/get-openai-key", data=json.dumps({"api_key" : api_key}))
     openai_key = openai_key.content.decode()
@@ -43,7 +43,7 @@ def initiate_fine_tuning(api_key, client, team_name, training_round):
     print(f"Success: Connected with OpenAI")        
     # Load training file into OpenAI
     training_file = openai.File.create(
-        file=open(training_file_name,'r'), 
+        file=open(openai_file,'r'), 
         purpose='fine-tune'
     )
     # Initiate training
