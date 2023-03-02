@@ -21,6 +21,11 @@
   - Review model performance using the _metrics_ tab in Labelbox, and begin curating your next 2000 data rows to add to your team's Labelbox Project for Round 2
   - Repeat for Rounds 2 and 3, each time creating an entirely new Model Run in your team's Labelbox Model
 
+# How to Win
+  - To submit your team, provide your professor with a write-up explaining each of your model runs and your methodologies for each
+  - Winners will be decided on model performance, model improvement run to run, and methodology communicated in your write-up
+  - Top winners get published on Labelbox's website, other cool prizes to-be-announced for runner ups!
+
 # Notebooks
 
 |            Notebook            |  Github  |    Google Colab   |
