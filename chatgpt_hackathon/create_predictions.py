@@ -30,7 +30,7 @@ def create_predictions(api_key, client, team_name, training_round, chatgpt_model
     print(f"Creating predictions and uploading to model run...")
     predictions = []
     with ThreadPoolExecutor(max_workers=8) as executor:
-        futures = [executor.submit(create_prediction, openai_key, chatgpt_model_name, label) for label in labels]
+        futures = [executor.submit(create_prediction, openai_key, chatgpt_model_name, label, ontology_name_path_to_schema) for label in labels]
         for future in tqdm(futures, total=len(labels)):
             prediction = future.result()
             predictions.append(prediction)
@@ -47,7 +47,7 @@ def create_predictions(api_key, client, team_name, training_round, chatgpt_model
     # Return upload results
     return err
 
-def get_answer_and_conf(openai_key, chatgpt_model_name, label, ontology_name_path_to_schema):
+def create_prediction(openai_key, chatgpt_model_name, label, ontology_name_path_to_schema):
     chatgpt_dict, data_row_id = get_chatgpt_input(label)
     pred = openai.Completion.create(
         api_key = openai_key,
