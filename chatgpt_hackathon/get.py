@@ -1,4 +1,5 @@
 import labelbox as lb
+import requests
 
 def get_model_run(client:lb.Client, model_name:str, training_round):
     """ For a given model, iterates through names to get the right model run
@@ -34,5 +35,18 @@ def get_project_with_name(client:lb.Client, project_name:str):
         raise ValueError(f"Multiple projects exist with name {project_name} - please resolve this, as each team should have a unique name and only one project each")
     project = projects[0] 
     return project
+
+def get_chatgpt_input(label):
+    gs_url = label['Labeled Data']
+    https_url = f"https://storage.googleapis.com/{gs_url[5:]}"
+    text = requests.get(https_url).content.decode()    
+    chatgpt_dict = {
+        "prompt" : f"{text}#-#-#-#-#",
+        "completion" : f"{label['Label']['classifications'][0]['answer']['value']}#####"
+    }
+    return chatgpt_dict, label["DataRow ID"]
+
+
+
 
   
