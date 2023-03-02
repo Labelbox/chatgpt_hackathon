@@ -2,3 +2,4 @@ from .get_project_with_name import get_project_with_name
 from .get_model_with_name import get_model_with_name
 from .register_team import register_team
 from .create_iteration import create_iteration
+from .create_training_file import create_training_file
