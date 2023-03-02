@@ -1,57 +1,23 @@
 import labelbox.data.annotation_types as lb_types
 from labelbox.data.serialization import NDJsonConverter
 import openai
-import time
 import uuid
-from datetime import datetime
-from datetime import datetime
-from pytz import timezone
 import requests
 import json
 
 def fine_tune_chatgpt(api_key, client, team_name, training_round, training_file_name, data_row_id_to_model_input):
     # Get openai key
+    print(f"Connecting with OpenAI...")
     openai_key = requests.post("https://us-central1-saleseng.cloudfunctions.net/get-openai-key", data=json.dumps({"api_key" : api_key}))
     openai_key = openai_key.content.decode()
     if "Error" in openai_key:
         raise ValueError(f"Incorrect API key - please ensure that your Labelbox API key is correct and try again")
     else:
         openai.api_key = openai_key
-    # Load training file into OpenAI
-    training_file = openai.File.create(
-        file=open(training_file_name,'r'), 
-        purpose='fine-tune'
-    )
-    # Initiate training
-    fine_tune_job = openai.FineTune.create(
-        api_key=openai_key, 
-        training_file=training_file["id"], 
-        model = 'ada'
-    )
-    fune_tune_job_id = fine_tune_job["id"]
-    print(f'Fine-tune Job Name {fune_tune_job_id} -- will check training status every 10 minutes until complete')
-    # Check training status every 5 minutes
-    tz = timezone('EST')  
-    training = True
-    while training:
-        now = datetime.now(tz) 
-        current_time = now.strftime("%H:%M:%S")
-        res = openai.FineTune.list_events(id=fune_tune_job_id)
-        for event in res["data"]:
-            if event["message"] == "Fine-tune succeeded":
-                training = False
-                break
-        if training:
-            print(f"{current_time} - Model training in progress, will check again in 5 minutes")
-            time.sleep(300)
-    print(f"{current_time} - Model training complete")            
-    # Get ChatGPT Model Name
-    for event in res["data"]:
-        if (len(event["message"]) > 15) and (event["message"][:14] == "Uploaded model"):
-            chatgpt_model_name = event["message"].split(": ")[1]    
-    print(f"ChatGPT Model Name: `{chatgpt_model_name}` -- save this for hackaton submission")      
+    print(f"Success: Connected with OpenAI")     
     # Create predictions
     print(f"Creating predictions and uploading to model run...")
+    model_run = 
     predictions = []
     for data_row_id in list(data_row_id_to_input.keys())[:2]:    
         pred = openai.Completion.create(
@@ -80,6 +46,8 @@ def fine_tune_chatgpt(api_key, client, team_name, training_round, training_file_
         predictions=ndjson_prediction
     )
     # Errors will appear for annotation uploads that failed.
-    print("Errors:", upload_job_prediction.errors)
+    err = upload_job_prediction.errors
+    print("Errors:", err)
     # Return the chatgpt model name
-    return chatgpt_model_name
+    return err
+
