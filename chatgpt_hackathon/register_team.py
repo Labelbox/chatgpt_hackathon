@@ -22,4 +22,4 @@ def register_team(client, team_name:str):
     model = client.create_model(name=team_name, ontology_id=ontology.uid)
     project = client.create_project(name=team_name, media_type=MediaType.Text, queue_mode=QueueMode.Batch)
     project.setup_editor(ontology)
-    print(f"Team {team_name} has registered a Labelbox Model and Project - good luck!")
+    print(f"Team `{team_name}` has registered a Labelbox Model and Project - good luck!")
