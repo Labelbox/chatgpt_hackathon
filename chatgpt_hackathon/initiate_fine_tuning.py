@@ -11,7 +11,7 @@ def initiate_fine_tuning(api_key, client, team_name, training_round):
     model_run = get_model_run(client, team_name, training_round)
     print(f"Exporting labels...")
     labels = model_run.export_labels(download=True)
-    print(f"Export complete")    
+    print(f"Export complete - {len(labels)} labels")    
     data_row_id_to_model_input = {}
     training_file_name = "completions.jsonl"
     my_file = open(training_file_name, "w")
