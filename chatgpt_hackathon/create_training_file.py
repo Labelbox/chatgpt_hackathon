@@ -1,3 +1,5 @@
+import requests
+import json
 from chatgpt_hackathon import get_model_with_name
 
 def create_training_file(client, team_name, training_round):
@@ -30,3 +32,13 @@ def get_model_run(client, team_name, training_round):
     if not found_model_run:
         raise ValueError(f"No model run for team name {team_name} with run name {training_round}")    
     return model_run
+
+def get_text(label):
+    """ Gets text for a given asset in GCS
+    Args:
+    Returns:
+    """
+    gs_url = label['Labeled Data']
+    https_url = f"https://storage.googleapis.com/{gs_url[5:]}"
+    text = requests.get(https_url).content.decode()
+    return text  
