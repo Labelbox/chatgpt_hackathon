@@ -1,4 +1,4 @@
-from chatgpt_hackathon import get_model_with_name
+from chatgpt_hackathon import get_model_run
 import requests
 import json
 import requests
@@ -47,19 +47,6 @@ def initiate_fine_tuning(api_key, client, team_name, training_round):
     fune_tune_job_id = fine_tune_job["id"]
     print(f'Fine-tune Job with ID `{fune_tune_job_id}` initiated')
     return fune_tune_job_id, data_row_id_to_model_input
-  
-def get_model_run(client, team_name, training_round):
-    """ For a given model, iterates through names to get the right model run
-    """
-    model = get_model_with_name(client, team_name)
-    found_model_run = False
-    for model_run in model.model_runs():
-        if model_run.name == str(training_round):
-            found_model_run = True
-            break
-    if not found_model_run:
-        raise ValueError(f"No model run for team name {team_name} with run name {training_round}")    
-    return model_run
 
 def get_text(label):
     """ Gets text for a given asset in GCS
