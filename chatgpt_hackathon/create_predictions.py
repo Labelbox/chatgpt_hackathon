@@ -38,7 +38,7 @@ def create_prediction(openai_key, chatgpt_model_name, prompt):
     pred = openai.Completion.create(
         api_key = openai_key,
         model = chatgpt_model_name,
-        prompt = data_row_id_to_input[data_row_id]["prompt"],
+        prompt = prompt,
         max_tokens = 1,
         logprobs = 4,
         temperature = 1
