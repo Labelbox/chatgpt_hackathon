@@ -13,8 +13,8 @@
   
 # Key Steps
   - Register your team in Labelbox with the `Register Your Team` notebook once you have Labelbox accounts
-  - Using the Labelbox Catalog, curate a training set to train Round 1 on by batching data rows to your team's Labelbox Project
-  - Once you're happy with your 2000 data rows in your project, run the `Send Curated Data Rows to Model Run` notebook
+  - Using the Labelbox Catalog, curate a Round 1 training set by batching selected data rows to your team's Labelbox Project
+  - Once you're happy with your 2000 data rows in your team's Labelbox Project, run the `Send Curated Data Rows to Model Run` notebook
   - Review your annotations one more time in your team's Model Run, if you're unhappy with your Model Run, you can delete it and refine data row selection in your team's Labelbox Project
   - Once you're happy with your team's Model Run selection, run the `Fine-Tune ChatGPT based on Data Rows in Model Run` to create predictions and upload them to Labelbox
   - Review model performance using the _metrics_ tab in Labelbox and begin curating your next 2000 data rows to send to your team's Labelbox Project
