@@ -26,9 +26,7 @@ def create_iteration(client, team_name, training_round):
     with ThreadPoolExecutor(max_workers=8) as executor:
         futures = [executor.submit(get_label_id_for_data_row_id, client, d.uid, source_project.uid) for d in data_rows]
         for future in tqdm(futures, total=len(data_rows)):
-            label_ids.append(future.result()[0])
-    for d in tqdm(data_rows):
-        label_ids.append(get_label_id_for_data_row_id(client, data_row.uid, source_project.uid)[0])    
+            label_ids.append(future.result()[0])   
     # Enforce training size
     if str(training_round) == "1" and len(label_ids) > 2000:
         raise ValueError(f"Training round 1 limited to 2000 data rows - please reduce the number of data rows in your Project")
