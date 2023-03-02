@@ -10,13 +10,14 @@ from concurrent.futures import ThreadPoolExecutor
 def initiate_fine_tuning(api_key, client, team_name, training_round):
     """ For a given training round, generates a training file to-be-passed to OpenAI and a dictionary with data row ID and input data
     """
+    training_round = str(training_round)
     model_run = get_model_run(client, team_name, training_round)
     print(f"Exporting labels...")
     labels = model_run.export_labels(download=True)
     print(f"Export complete - {len(labels)} labels")    
     data_row_id_to_model_input = {}
-    training_file_name = "completions.jsonl"
-    my_file = open(training_file_name, "w")
+    openai_file_name = "completions.jsonl"
+    openai_file = open(openai_file_name, "w")
     print(f"Creating training file...")
     with ThreadPoolExecutor(max_workers=8) as executor:
         futures = [executor.submit(write_chatgpt_input, label) for label in labels]
@@ -24,8 +25,14 @@ def initiate_fine_tuning(api_key, client, team_name, training_round):
             chatgpt_dict, data_row_id = future.result()
             data_row_id_to_model_input[data_row_id] = chatgpt_dict
             as_string = json.dumps(chatgpt_dict)
-            my_file.write(f"{as_string}\n")         
-    print(f"Success: Created training file with name `{training_file_name}`")   
+            openai_file.write(f"{as_string}\n")   
+    openai_file.close()
+    print(f"Success: Created OpenAI training file with name `{openai_file_name}`")   
+    lb_file_name = f"lb_training_file_{training_round}.json"
+    lb_file = open(lb_file_name, "w")
+    lb_file.write(json.dumps(data_row_id_to_model_input))
+    lb_file.close()
+    print(f"Success: Created Labelbox training file with name `{training_file_name}`")   
     print(f"Connecting with OpenAI...")
     openai_key = requests.post("https://us-central1-saleseng.cloudfunctions.net/get-openai-key", data=json.dumps({"api_key" : api_key}))
     openai_key = openai_key.content.decode()
