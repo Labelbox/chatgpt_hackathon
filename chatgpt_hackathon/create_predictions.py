@@ -39,14 +39,18 @@ def create_predictions(api_key, client, team_name, training_round, chatgpt_model
         name=str(uuid.uuid4()),
         predictions=predictions
     )
-    # Errors will appear for annotation uploads that failed.
-    err = upload_job.errors
-    if not err:
-        print(f"Success: Predictions uploaded to model run")
-    else:
-        print(f"Upload Error: {err}")
-    # Return upload results
-    return err
+    try:
+        # Errors will appear for annotation uploads that failed.
+        err = upload_job.errors
+        if not err:
+            print(f"Success: Predictions uploaded to model run")
+        else:
+            print(f"Upload Error: {err}")
+        # Return upload results
+        return err
+    except Exception as e:
+        print(e)
+        return predictions
 
 def create_prediction(openai_key, chatgpt_model_name, label, ontology_name_path_to_schema):
     chatgpt_dict, data_row_id = get_chatgpt_input(label)
