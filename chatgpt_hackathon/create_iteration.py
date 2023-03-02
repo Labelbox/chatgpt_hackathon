@@ -17,7 +17,7 @@ def create_iteration(client, team_name, training_round):
     print(f"Adding labels to model run...")
     data_rows = []
     for batch in project.batches():
-        data_rows = [data_row for data_row in batch.export_data_rows()]
+        data_rows.extend([data_row for data_row in batch.export_data_rows()])
     label_ids = [get_label_id_for_data_row_id(client, data_row.uid, source_project.uid)[0] for data_row in data_rows]
     # Enforce training size
     if str(training_round) == "1" and len(label_ids) > 2000:
