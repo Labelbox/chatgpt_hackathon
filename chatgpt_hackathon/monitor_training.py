@@ -21,7 +21,7 @@ def monitor_training(api_key, fine_tune_job_id):
     while training:
         now = datetime.now(tz) 
         current_time = now.strftime("%H:%M:%S")
-        res = openai.FineTune.list_events(id=fune_tune_job_id)
+        res = openai.FineTune.list_events(id=fine_tune_job_id)
         for event in res["data"]:
             if event["message"] == "Fine-tune succeeded":
                 training = False
