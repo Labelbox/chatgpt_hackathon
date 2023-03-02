@@ -6,7 +6,8 @@ import openai
 import uuid
 import requests
 import json
-import tqdm
+from tqdm import tqdm
+from labelbase.ontology import get_ontology_schema_to_name_path
 
 def create_predictions(api_key, client, team_name, training_round, chatgpt_model_name):
     # Get openai key
