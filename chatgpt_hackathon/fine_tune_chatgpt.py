@@ -7,6 +7,7 @@ from datetime import datetime
 from datetime import datetime
 from pytz import timezone
 import requests
+import json
 
 def fine_tune_chatgpt(api_key, client, team_name, training_round, training_file_name, data_row_id_to_model_input):
     # Get openai key
