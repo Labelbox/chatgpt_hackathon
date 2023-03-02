@@ -27,7 +27,7 @@ def create_predictions(api_key, client, team_name, training_round, chatgpt_model
     ontology = get_project_with_name(client, team_name).ontology()
     ontology_name_path_to_schema = get_ontology_schema_to_name_path(ontology, invert=True)
     # Create predictions
-    print(f"Creating predictions and uploading to model run...")
+    print(f"Creating predictions...")
     predictions = []
     with ThreadPoolExecutor(max_workers=8) as executor:
         futures = [executor.submit(create_prediction, openai_key, chatgpt_model_name, label, ontology_name_path_to_schema) for label in labels]
@@ -84,8 +84,9 @@ def create_prediction(openai_key, chatgpt_model_name, label, ontology_name_path_
       # If the token name path is in the ontology, let's match it to its schema id
         else:
             name_path = tok_name_path
+    # Catches when ChatGPT didn't do a good job at predicting sentiment within the parameters of the use case
     if not name_path:
-        print(f"Error converting ChatGPT output to Labelbox output - please share the following error statement with your professor: {pred}")
+        name_path = "emotions///neutral"
     schema_id = ontology_name_path_to_schema[name_path]
     pred_answer = name_path.split("///")[1]
     radio_prediction = lb_types.ClassificationAnnotation(
