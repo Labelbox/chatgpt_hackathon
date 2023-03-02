@@ -5,12 +5,14 @@ import openai
 
 def monitor_training(api_key, fine_tune_job_id):
     # Get openai key
+    print(f"Connecting with OpenAI...")
     openai_key = requests.post("https://us-central1-saleseng.cloudfunctions.net/get-openai-key", data=json.dumps({"api_key" : api_key}))
     openai_key = openai_key.content.decode()
     if "Error" in openai_key:
         raise ValueError(f"Incorrect API key - please ensure that your Labelbox API key is correct and try again")
     else:
-        openai.api_key = openai_key  
+        openai.api_key = openai_key
+    print(f"Success: Connected with OpenAI")  
     # Check training status every 5 minutes
     tz = timezone('EST')  
     training = True
