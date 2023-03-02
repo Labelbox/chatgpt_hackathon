@@ -18,8 +18,8 @@
   - Review your annotations one more time in your team's Model Run, if you're unhappy with your Model Run prior to fine-tuning, you can delete it and refine data row selection in your team's Labelbox Project
   - Once you're happy with your team's Model Run selection, run the `Fine-Tune ChatGPT based on Data Rows in Model Run` to create predictions and upload them to Labelbox
     - **Once you've fine-tuned your model and created predictions, you cannot delete the model run**
-  - Review model performance using the _metrics_ tab in Labelbox and begin curating your next 2000 data rows to send to your team's Labelbox Project
-  - Repeat for rounds 2 and 3, each time creating an entirely new Model Run in your team's Labelbox Model
+  - Review model performance using the _metrics_ tab in Labelbox, and begin curating your next 2000 data rows to add to your team's Labelbox Project for Round 2
+  - Repeat for Rounds 2 and 3, each time creating an entirely new Model Run in your team's Labelbox Model
 
 # Notebooks
 
