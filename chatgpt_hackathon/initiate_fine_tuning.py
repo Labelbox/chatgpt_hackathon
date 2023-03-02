@@ -13,7 +13,8 @@ def initiate_fine_tuning(api_key, client, team_name, training_round):
     labels = model_run.export_labels(download=True)
     print(f"Export complete")    
     data_row_id_to_model_input = {}
-    my_file = open("completions.jsonl", "w")
+    training_file_name = "completions.jsonl"
+    my_file = open(training_file_name, "w")
     print(f"Creating training file...")
     for label in labels:
         text = get_text(label)
@@ -24,7 +25,7 @@ def initiate_fine_tuning(api_key, client, team_name, training_round):
         data_row_id_to_model_input[label["DataRow ID"]] = chatgpt_dict
         as_string = json.dumps(chatgpt_dict)
         my_file.write(f"{as_string}\n")      
-    print(f"Success: Created training file with name `completions.jsonl`")   
+    print(f"Success: Created training file with name `{training_file_name}`")   
     print(f"Connecting with OpenAI...")
     openai_key = requests.post("https://us-central1-saleseng.cloudfunctions.net/get-openai-key", data=json.dumps({"api_key" : api_key}))
     openai_key = openai_key.content.decode()
