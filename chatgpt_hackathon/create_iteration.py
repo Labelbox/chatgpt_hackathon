@@ -29,7 +29,7 @@ def create_iteration(client, team_name, training_round):
     if str(training_round) == "3" and len(label_ids) > 6000:
         raise ValueError(f"Training round 3 limited to 6000 data rows - please reduce the number of data rows in your Project")        
     # Add labels to model run
-    print(f"Adding {len(label_ids} to model run")    
+    print(f"Adding {len(label_ids)} to model run")
     model_run.upsert_labels(label_ids)
     print(f"Success: Labels added to model run")
     # Return created model run
