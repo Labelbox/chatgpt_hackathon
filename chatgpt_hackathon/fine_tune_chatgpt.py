@@ -28,14 +28,15 @@ def fine_tune_chatgpt(api_key, client, team_name, training_round, training_file_
         training_file=training_file["id"], 
         model = 'ada'
     )
-    print(f'Fine-tune initiated -- will check training status every 10 minutes until complete')
+    fune_tune_job_id = fine_tune_job["id"]
+    print(f'Fine-tune Job Name {fune_tune_job_id} -- will check training status every 10 minutes until complete')
     # Check training status every 5 minutes
     tz = timezone('EST')  
     training = True
     while training:
         now = datetime.now(tz) 
         current_time = now.strftime("%H:%M:%S")
-        res = openai.FineTune.list_events(id=fine_tune_job["id"])
+        res = openai.FineTune.list_events(id=fune_tune_job_id)
         for event in res["data"]:
             if event["message"] == "Fine-tune succeeded":
                 training = False
