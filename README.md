@@ -1,6 +1,7 @@
 # Challenge
 
-  - You’re tasked with fine-tuning ChatGPT with a specific goal - sentiment analysis in Reddit posts…but have a limited budget for model training 
+  - You’re tasked with fine-tuning ChatGPT with a specific goal - sentiment analysis in Reddit posts
+  - …but you have a limited budget for model training 
   - Due to this budget, you can only fine-tune ChatGPT **three times**, each time you only get 2000 incremental training data rows
     - So, you can train on 2000 data rows in Round 1, 4000 data rows in Round 2, and 6000 data rows in Round 3
     
