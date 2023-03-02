@@ -97,7 +97,9 @@ def create_prediction(openai_key, chatgpt_model_name, label, ontology_name_path_
         "uuid" : str(uuid.uuid4()),
         "dataRow" : {"id" : data_row_id},
         "schemaId" : ontology_name_path_to_schema["emotions"],
-        "answer" : {"schemaId" : schema_id},
-        "confidence" : 1+(int(pred['choices'][0]['logprobs']['token_logprobs'][0])/10)
+        "answer" : {
+            "schemaId" : schema_id,
+            "confidence" : float(1+(int(pred['choices'][0]['logprobs']['token_logprobs'][0])/10))
+        }
     }  
     return label_ndjson
