@@ -37,7 +37,7 @@ def initiate_fine_tuning(api_key, client, team_name, training_round):
     print(f"Success: Connected with OpenAI")        
     # Load training file into OpenAI
     training_file = openai.File.create(
-        file=open(openai_file,'r'), 
+        file=open(openai_file_name,'r'), 
         purpose='fine-tune'
     )
     # Initiate training
