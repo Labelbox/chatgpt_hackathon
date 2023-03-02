@@ -4,6 +4,7 @@ import json
 import requests
 import json
 import openai
+from tqdm import tqdm
 
 def initiate_fine_tuning(api_key, client, team_name, training_round):
     """ For a given training round, generates a training file to-be-passed to OpenAI and a dictionary with data row ID and input data
@@ -16,7 +17,7 @@ def initiate_fine_tuning(api_key, client, team_name, training_round):
     training_file_name = "completions.jsonl"
     my_file = open(training_file_name, "w")
     print(f"Creating training file...")
-    for label in labels:
+    for label in tqdm(labels):
         text = get_text(label)
         chatgpt_dict = {
             "prompt" : f"{get_text(label)}#-#-#-#-#",
