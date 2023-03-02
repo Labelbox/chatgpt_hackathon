@@ -1,7 +1,5 @@
 from chatgpt_hackathon import get_model_run, get_chatgpt_input, get_project_with_name
-from labelbox.data.serialization import NDJsonConverter
 from concurrent.futures import ThreadPoolExecutor
-import labelbox.data.annotation_types as lb_types
 import openai
 import uuid
 import requests
