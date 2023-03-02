@@ -21,11 +21,10 @@ def initiate_fine_tuning(api_key, client, team_name, training_round):
     with ThreadPoolExecutor(max_workers=8) as executor:
         futures = [executor.submit(write_chatgpt_input, label) for label in labels]
         for future in tqdm(futures, total=len(labels)):
-            chatgpt_dict = future.result()[0]
-            data_row_id = future.result()[1]
+            chatgpt_dict, data_row_id = future.result()
             data_row_id_to_model_input[data_row_id] = chatgpt_dict
             as_string = json.dumps(chatgpt_dict)
-            file.write(f"{as_string}\n")         
+            my_file.write(f"{as_string}\n")         
     print(f"Success: Created training file with name `{training_file_name}`")   
     print(f"Connecting with OpenAI...")
     openai_key = requests.post("https://us-central1-saleseng.cloudfunctions.net/get-openai-key", data=json.dumps({"api_key" : api_key}))
