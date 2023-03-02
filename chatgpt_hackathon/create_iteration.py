@@ -1,4 +1,5 @@
 import labelbox as lb
+from tqdm import tqdm
 from chatgpt_hackathon import get_project_with_name, get_model_with_name
 
 def create_iteration(client, team_name, training_round):
@@ -20,7 +21,9 @@ def create_iteration(client, team_name, training_round):
         batch_rows = [data_row for data_row in batch.export_data_rows()]
         data_rows.extend(batch_rows)
     print(f"{len(data_rows)} data rows in project")
-    label_ids = [get_label_id_for_data_row_id(client, data_row.uid, source_project.uid)[0] for data_row in data_rows]
+    label_ids = []
+    for d in tqdm(data_rows):
+        label_ids.append(get_label_id_for_data_row_id(client, data_row.uid, source_project.uid)[0])
     # Enforce training size
     if str(training_round) == "1" and len(label_ids) > 2000:
         raise ValueError(f"Training round 1 limited to 2000 data rows - please reduce the number of data rows in your Project")
