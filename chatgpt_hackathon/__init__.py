@@ -1,4 +1,4 @@
-from .get import get_model_run, get_model_with_name, get_project_with_name
+from .get import get_model_run, get_model_with_name, get_project_with_name, get_chatgpt_input
 from .register_team import register_team
 from .create_iteration import create_iteration
 from .initiate_fine_tuning import initiate_fine_tuning
