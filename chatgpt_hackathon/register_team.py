@@ -1,7 +1,7 @@
 import labelbox as lb
 from labelbox.schema.media_type import MediaType
 from labelbox.schema.queue_mode import QueueMode
-from chatgpt_hackathon.get import get_project_with_name
+from chatgpt_hackathon import get_project_with_name
 
 def register_team(client, team_name:str):
     """ Creates a Labelbox Project and Model given a team name
