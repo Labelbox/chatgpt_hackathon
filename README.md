@@ -8,7 +8,7 @@
 
 # How to Enter
 
-  - Create teams of three with a unique team name - prove your .edu email to your professor and we will create a Labelbox account for you and your team in the hackathon workspace
+  - Create teams of three with a unique team name - provide your .edu email to your professor and we will create Labelbox accounts for you and your team in the hackathon workspace
   - Follow the notebooks in this repo to register, send curated data rows to a model run, and fine tune ChatGPT on curated data rows
   
 # Key Steps
