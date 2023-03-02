@@ -1,4 +1,6 @@
 import time
+import requests
+import json
 from datetime import datetime
 from pytz import timezone
 import openai
