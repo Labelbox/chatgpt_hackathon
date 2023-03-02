@@ -1,5 +1,5 @@
 import labelbox as lb
-from chatgpt_hackathon import get_project_with_name, get_model_with_name
+from chatgpt_hackathon.get import get_project_with_name, get_model_with_name
 
 def create_iteration(client, team_name, training_round):
     """ Takes data rows from a project and retrieves labels from the source project to create a model run
