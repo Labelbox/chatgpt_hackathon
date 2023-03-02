@@ -41,6 +41,7 @@ def fine_tune_chatgpt(api_key, client, team_name, training_round, training_file_
         predictions.append(label_prediction)
     ndjson_prediction = list(NDJsonConverter.serialize(predictions)) 
     # Upload the prediction label to the Model Run
+    print(f"Uploading predictions to model run...")    
     upload_job_prediction = model_run.add_predictions(
         name="prediction_upload_job"+str(uuid.uuid4()),
         predictions=ndjson_prediction
