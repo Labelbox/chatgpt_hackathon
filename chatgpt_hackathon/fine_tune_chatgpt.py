@@ -1,23 +1,20 @@
-import labelbox.data.annotation_types as lb_types
 from labelbox.data.serialization import NDJsonConverter
+import labelbox.data.annotation_types as lb_types
 import openai
 import uuid
 import requests
 import json
 
-def fine_tune_chatgpt(api_key, client, team_name, training_round, training_file_name, data_row_id_to_model_input):
+def create_predictions(api_key, client, team_name, training_round, chatgpt_model_name, data_row_id_to_model_input):
     # Get openai key
-    print(f"Connecting with OpenAI...")
     openai_key = requests.post("https://us-central1-saleseng.cloudfunctions.net/get-openai-key", data=json.dumps({"api_key" : api_key}))
     openai_key = openai_key.content.decode()
     if "Error" in openai_key:
         raise ValueError(f"Incorrect API key - please ensure that your Labelbox API key is correct and try again")
     else:
-        openai.api_key = openai_key
-    print(f"Success: Connected with OpenAI")     
+        openai.api_key = openai_key  
     # Create predictions
     print(f"Creating predictions and uploading to model run...")
-    model_run = 
     predictions = []
     for data_row_id in list(data_row_id_to_input.keys())[:2]:    
         pred = openai.Completion.create(
@@ -41,14 +38,13 @@ def fine_tune_chatgpt(api_key, client, team_name, training_round, training_file_
         predictions.append(label_prediction)
     ndjson_prediction = list(NDJsonConverter.serialize(predictions)) 
     # Upload the prediction label to the Model Run
-    print(f"Uploading predictions to model run...")    
     upload_job_prediction = model_run.add_predictions(
-        name="prediction_upload_job"+str(uuid.uuid4()),
+        name=str(uuid.uuid4()),
         predictions=ndjson_prediction
     )
     # Errors will appear for annotation uploads that failed.
-    err = upload_job_prediction.errors
-    print("Errors:", err)
-    # Return the chatgpt model name
+    upload_job.wait_till_done()
+    err = upload_job.errors
+    print("Errors:", upload_job_prediction.err)
+    # Return upload results
     return err
-
