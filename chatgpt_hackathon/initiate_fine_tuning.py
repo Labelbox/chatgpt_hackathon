@@ -1,8 +1,11 @@
 import requests
 import json
 from chatgpt_hackathon import get_model_with_name
+import requests
+import json
+import openai
 
-def create_training_file(client, team_name, training_round):
+def initiate_fine_tuning(client, team_name, training_round):
     """ For a given training round, generates a training file to-be-passed to OpenAI and a dictionary with data row ID and input data
     """
     model_run = get_model_run(client, team_name, training_round)
@@ -21,8 +24,29 @@ def create_training_file(client, team_name, training_round):
         data_row_id_to_model_input[label["DataRow ID"]] = chatgpt_dict
         as_string = json.dumps(chatgpt_dict)
         my_file.write(f"{as_string}\n")      
-    print(f"Success: Created training file with name `completions.jsonl`")        
-    return "completions.jsonl", data_row_id_to_model_input
+    print(f"Success: Created training file with name `completions.jsonl`")   
+    print(f"Connecting with OpenAI...")
+    openai_key = requests.post("https://us-central1-saleseng.cloudfunctions.net/get-openai-key", data=json.dumps({"api_key" : api_key}))
+    openai_key = openai_key.content.decode()
+    if "Error" in openai_key:
+        raise ValueError(f"Incorrect API key - please ensure that your Labelbox API key is correct and try again")
+    else:
+        openai.api_key = openai_key
+    print(f"Success: Connected with OpenAI")        
+    # Load training file into OpenAI
+    training_file = openai.File.create(
+        file=open(training_file_name,'r'), 
+        purpose='fine-tune'
+    )
+    # Initiate training
+    fine_tune_job = openai.FineTune.create(
+        api_key=openai_key, 
+        training_file=training_file["id"], 
+        model = 'ada'
+    )
+    fune_tune_job_id = fine_tune_job["id"]
+    print(f'Fine-tune Job with ID `{fune_tune_job_id}` initiated')
+    return fune_tune_job_id, data_row_id_to_model_input
   
 def get_model_run(client, team_name, training_round):
     """ For a given model, iterates through names to get the right model run
